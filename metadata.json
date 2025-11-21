@@ -1,0 +1,7 @@
+{
+  "name": "GemmaNutriScan",
+  "description": "A local-first AI calorie and nutrition analyzer using Gemma 3 Vision.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

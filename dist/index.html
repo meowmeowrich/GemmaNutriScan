@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GemmaNutriScan</title>
+  <script type="module" crossorigin src="/assets/index-BMdEn3eX.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CdYv-TP_.css">
+</head>
+  <body class="bg-slate-900 text-slate-100 antialiased min-h-screen selection:bg-brand-500 selection:text-white pb-20">
+    
+    <!-- Header -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
+      <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold tracking-tight text-white">
+            Gemma<span class="text-brand-400">NutriScan</span>
+          </h1>
+        </div>
+        <button id="settings-btn" class="p-2 text-slate-400 hover:text-white transition rounded-full hover:bg-slate-800">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        
+        <!-- Left: Input & Preview -->
+        <div class="space-y-6">
+          <div id="upload-zone" class="relative aspect-square rounded-2xl border-2 border-dashed border-slate-600 hover:border-brand-400 hover:bg-slate-800/50 flex flex-col items-center justify-center cursor-pointer overflow-hidden transition-all duration-300 group">
+            <img id="image-preview" class="absolute inset-0 w-full h-full object-cover hidden" />
+            <div id="upload-prompt" class="text-center p-8 z-10 pointer-events-none">
+              <div class="w-16 h-16 mx-auto bg-slate-800 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <p class="text-slate-300 font-medium mb-1">Take a photo or upload</p>
+              <p class="text-slate-500 text-sm">Gemma 3 Vision (Normalized to 896px)</p>
+            </div>
+            <input type="file" id="file-input" accept="image/*" class="hidden" />
+          </div>
+
+          <!-- Loading State -->
+          <div id="loading-state" class="hidden bg-slate-800/80 backdrop-blur p-6 rounded-xl border border-slate-700 shadow-lg">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-5 h-5 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+              <span class="text-brand-100 font-medium animate-pulse">Gemma is thinking...</span>
+            </div>
+            <div class="space-y-2">
+              <div class="h-2 bg-slate-700 rounded-full w-3/4 animate-pulse"></div>
+              <div class="h-2 bg-slate-700 rounded-full w-1/2 animate-pulse delay-75"></div>
+              <div class="h-2 bg-slate-700 rounded-full w-5/6 animate-pulse delay-150"></div>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div id="error-state" class="hidden bg-red-500/10 border border-red-500/50 p-4 rounded-xl flex items-start gap-3 text-red-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p class="font-medium">Analysis Failed</p>
+              <p id="error-message" class="text-sm opacity-80"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Results -->
+        <div id="results-container" class="space-y-6">
+          <!-- Empty State -->
+          <div id="empty-state" class="h-full flex flex-col items-center justify-center text-slate-500 p-12 bg-slate-800/20 rounded-3xl border-2 border-dashed border-slate-800">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <p>Nutritional data will appear here</p>
+          </div>
+
+          <!-- Content (Hidden by default) -->
+          <div id="content-state" class="hidden animate-fade-in">
+            <!-- Main Info Card -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-3xl border border-slate-700 shadow-2xl mb-6 relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 blur-3xl rounded-full -mr-10 -mt-10"></div>
+              <div class="relative z-10">
+                <h2 id="res-food-name" class="text-3xl font-bold text-white mb-1"></h2>
+                <p id="res-description" class="text-slate-400 text-sm mb-6"></p>
+                
+                <div class="flex items-center gap-6">
+                  <div>
+                    <p class="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-1">Calories</p>
+                    <p id="res-calories" class="text-4xl font-bold text-brand-400"></p>
+                  </div>
+                  <div class="w-px h-12 bg-slate-700"></div>
+                  <div>
+                    <p class="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-1">Weight (Est)</p>
+                    <p id="res-weight" class="text-2xl font-semibold text-white"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6">
+              <!-- Macros -->
+              <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                  </svg>
+                  Macros Breakdown
+                </h3>
+                <div id="macros-list" class="space-y-4"></div>
+              </div>
+
+              <!-- Vitamins -->
+              <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                  </svg>
+                  Micronutrients & Minerals
+                </h3>
+                <div id="vitamins-list" class="space-y-4"></div>
+                
+                <div class="mt-6 pt-4 border-t border-slate-700 flex justify-between items-center">
+                   <span class="text-slate-400 text-sm">Health Score</span>
+                   <span id="health-score" class="text-xl font-bold text-brand-400"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+      <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 w-full max-w-md shadow-2xl transform transition-all">
+        <h2 class="text-xl font-bold text-white mb-4">Server Settings</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm text-slate-400 mb-1">LM Studio Endpoint URL</label>
+            <input type="text" id="setting-url" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="http://localhost:1234">
+          </div>
+          <div>
+            <label class="block text-sm text-slate-400 mb-1">Model ID</label>
+            <input type="text" id="setting-model" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-white focus:ring-2 focus:ring-brand-500 outline-none" placeholder="google/gemma-3-12b">
+          </div>
+        </div>
+        <div class="flex justify-end gap-3 mt-6">
+          <button id="settings-close" class="px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition">Cancel</button>
+          <button id="settings-save" class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition shadow-lg shadow-brand-500/20">Save</button>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
